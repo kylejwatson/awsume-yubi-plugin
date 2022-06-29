@@ -1,8 +1,9 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='awsume-yubi-plugin',
-    version='0.0.0',
+    packages=find_packages(),
+    version='0.1.0',
     entry_points={
         'awsume': [
             'yubi = yubi'
@@ -11,4 +12,13 @@ setup(
     author='Kyle Watson',
     author_email='kyle.watson@woodwing.com',
     py_modules=['yubi'],
+    description='Plugin to use a Yubikey with awsume',
+    long_description=open('README.md', 'r').read(),
+    long_description_content_type='text/markdown',
+    license='MIT',
+    url='https://github.com/kylejwatson/awsume-yubi-plugin',
+    install_requires=[
+        'awsume',
+        'yubikey-manager',
+    ]
 )
