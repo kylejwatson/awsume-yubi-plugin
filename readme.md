@@ -25,6 +25,14 @@ If you've installed awsume with `pipx`, this will install the console plugin in 
 pipx inject awsume awsume-yubi-plugin
 ```
 
+If you've installed awsume with `brew`, you will first need to activate the `venv` that awsume is installed into:
+
+```
+source $(brew --prefix awsume)/libexec/bin/activate
+pip install awsume-yubi-plugin
+deactivate
+```
+
 ## Usage
 
 - First you must setup your AWS account to use a virtual MFA device that uses the Yubikey Oath service: https://aws.amazon.com/blogs/security/enhance-programmatic-access-for-iam-users-using-yubikey-for-multi-factor-authentication/
