@@ -1,14 +1,11 @@
 import argparse
-from ast import arg
-import sys
 
-from awsume.awsumepy import hookimpl, safe_print
-from awsume.awsumepy.lib.logger import logger
+from awsume.awsumepy import hookimpl
 from awsume.awsumepy.lib.cache import read_aws_cache, valid_cache_session
-from ykman.device import connect_to_device, list_all_devices
+from ykman.device import list_all_devices
 from yubikit.core.smartcard import SmartCardConnection
 from yubikit.oath import OathSession
-from ykman.cli.util import prompt_timeout
+from ykman._cli.util import prompt_timeout
 
 
 @hookimpl
@@ -43,30 +40,30 @@ def _search(creds, query):
 def pre_get_credentials(config: dict, arguments: argparse.Namespace, profiles: dict):
     if not arguments.yubi:
         return
+
     profile = profiles.get(arguments.target_profile_name)
     if not profile:
         return
+
     source_profile = profiles.get(profile.get("source_profile"))
     if not source_profile:
         return
-    mfa_serial = profile.get("mfa_serial")
+
+    mfa_serial = profile.get("mfa_serial") or source_profile.get("mfa_serial")
     if not mfa_serial:
         return
 
-    cache_file_name = 'aws-credentials-' + \
-        source_profile.get("aws_access_key_id")
+    cache_file_name = f'aws-credentials-{source_profile.get("aws_access_key_id")}'
     cache_session = read_aws_cache(cache_file_name)
 
-    if valid_cache_session(cache_session):
+    if valid_cache_session(cache_session) and not arguments.force_refresh:
         return
 
-    for _, info in list_all_devices():
+    for dev, info in list_all_devices():
         if not info.version >= (5, 0, 0):
             continue
 
-        connection, _, _ = connect_to_device(
-            serial=info.serial, connection_types=[SmartCardConnection])
-        with connection:
+        with dev.open_connection(SmartCardConnection) as connection:
             session = OathSession(connection)
 
             entries = session.calculate_all()
