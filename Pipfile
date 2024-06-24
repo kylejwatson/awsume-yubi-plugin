@@ -8,8 +8,8 @@ pylint = "*"
 twine = "*"
 
 [packages]
-awsume = "*"
-yubikey-manager = "*"
+awsume = "==4.*"
+yubikey-manager = "==5.*"
 
 [requires]
 python_version = "3"

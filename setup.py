@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='awsume-yubi-plugin',
     packages=find_packages(),
-    version='0.1.2',
+    version='0.2.1',
     entry_points={
         'awsume': [
             'yubi = yubi'
@@ -18,7 +18,7 @@ setup(
     license='MIT',
     url='https://github.com/kylejwatson/awsume-yubi-plugin',
     install_requires=[
-        'awsume',
-        'yubikey-manager',
+        'awsume~=4.5.4',
+        'yubikey-manager~=5.3.0',
     ]
 )
